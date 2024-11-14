@@ -21,7 +21,6 @@
 		45AC32622CE3E8BA007D4235 /* EmojiCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AC32612CE3E8BA007D4235 /* EmojiCollectionView.swift */; };
 		45C038102CCD5B7E00D0481C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C0380F2CCD5B7E00D0481C /* AppDelegate.swift */; };
 		45C038122CCD5B7E00D0481C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C038112CCD5B7E00D0481C /* SceneDelegate.swift */; };
-		45C038142CCD5B7E00D0481C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C038132CCD5B7E00D0481C /* ViewController.swift */; };
 		45C038192CCD5B7F00D0481C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45C038182CCD5B7F00D0481C /* Assets.xcassets */; };
 		45C0381C2CCD5B7F00D0481C /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 45C0381B2CCD5B7F00D0481C /* Base */; };
 /* End PBXBuildFile section */
@@ -42,7 +41,6 @@
 		45C0380C2CCD5B7E00D0481C /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45C0380F2CCD5B7E00D0481C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		45C038112CCD5B7E00D0481C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		45C038132CCD5B7E00D0481C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		45C038182CCD5B7F00D0481C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		45C0381B2CCD5B7F00D0481C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		45C0381D2CCD5B7F00D0481C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -80,7 +78,6 @@
 			children = (
 				45C0380F2CCD5B7E00D0481C /* AppDelegate.swift */,
 				45C038112CCD5B7E00D0481C /* SceneDelegate.swift */,
-				45C038132CCD5B7E00D0481C /* ViewController.swift */,
 				45C038182CCD5B7F00D0481C /* Assets.xcassets */,
 				45C0381A2CCD5B7F00D0481C /* LaunchScreen.storyboard */,
 				45C0381D2CCD5B7F00D0481C /* Info.plist */,
@@ -172,7 +169,6 @@
 			files = (
 				450BC0B82CE4E3F200F0D7DE /* ColorCollectionViewCell.swift in Sources */,
 				45AC32602CE3E79B007D4235 /* EmojiCollectionViewCell.swift in Sources */,
-				45C038142CCD5B7E00D0481C /* ViewController.swift in Sources */,
 				452919352CE21CB2000DA963 /* NewHabitViewController.swift in Sources */,
 				454A077D2CD39A510036C3ED /* StatisticsViewController.swift in Sources */,
 				450FBEDF2CD9535E0074D8CB /* TrackerCategory.swift in Sources */,

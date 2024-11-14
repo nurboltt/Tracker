@@ -7,20 +7,42 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		450BC0B82CE4E3F200F0D7DE /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450BC0B72CE4E3F200F0D7DE /* ColorCollectionViewCell.swift */; };
+		450FBEDD2CD9534C0074D8CB /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FBEDC2CD9534C0074D8CB /* Tracker.swift */; };
+		450FBEDF2CD9535E0074D8CB /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FBEDE2CD9535E0074D8CB /* TrackerCategory.swift */; };
+		450FBEE12CD9536D0074D8CB /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FBEE02CD9536D0074D8CB /* TrackerRecord.swift */; };
+		450FBEE32CE1F4060074D8CB /* AddTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FBEE22CE1F4060074D8CB /* AddTrackerViewController.swift */; };
+		452919352CE21CB2000DA963 /* NewHabitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452919342CE21CB2000DA963 /* NewHabitViewController.swift */; };
+		454A077B2CD2BA3C0036C3ED /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A077A2CD2BA3C0036C3ED /* TabBarController.swift */; };
+		454A077D2CD39A510036C3ED /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A077C2CD39A510036C3ED /* StatisticsViewController.swift */; };
+		454A077F2CD39A7A0036C3ED /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A077E2CD39A7A0036C3ED /* TrackersViewController.swift */; };
+		45AC323E2CE341DF007D4235 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AC323D2CE341DF007D4235 /* CustomTableViewCell.swift */; };
+		45AC32602CE3E79B007D4235 /* EmojiCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AC325F2CE3E79B007D4235 /* EmojiCollectionViewCell.swift */; };
+		45AC32622CE3E8BA007D4235 /* EmojiCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AC32612CE3E8BA007D4235 /* EmojiCollectionView.swift */; };
 		45C038102CCD5B7E00D0481C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C0380F2CCD5B7E00D0481C /* AppDelegate.swift */; };
 		45C038122CCD5B7E00D0481C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C038112CCD5B7E00D0481C /* SceneDelegate.swift */; };
 		45C038142CCD5B7E00D0481C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C038132CCD5B7E00D0481C /* ViewController.swift */; };
-		45C038172CCD5B7E00D0481C /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 45C038162CCD5B7E00D0481C /* Base */; };
 		45C038192CCD5B7F00D0481C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45C038182CCD5B7F00D0481C /* Assets.xcassets */; };
 		45C0381C2CCD5B7F00D0481C /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 45C0381B2CCD5B7F00D0481C /* Base */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		450BC0B72CE4E3F200F0D7DE /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewCell.swift; sourceTree = "<group>"; };
+		450FBEDC2CD9534C0074D8CB /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
+		450FBEDE2CD9535E0074D8CB /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
+		450FBEE02CD9536D0074D8CB /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
+		450FBEE22CE1F4060074D8CB /* AddTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTrackerViewController.swift; sourceTree = "<group>"; };
+		452919342CE21CB2000DA963 /* NewHabitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHabitViewController.swift; sourceTree = "<group>"; };
+		454A077A2CD2BA3C0036C3ED /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		454A077C2CD39A510036C3ED /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
+		454A077E2CD39A7A0036C3ED /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
+		45AC323D2CE341DF007D4235 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
+		45AC325F2CE3E79B007D4235 /* EmojiCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCollectionViewCell.swift; sourceTree = "<group>"; };
+		45AC32612CE3E8BA007D4235 /* EmojiCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCollectionView.swift; sourceTree = "<group>"; };
 		45C0380C2CCD5B7E00D0481C /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45C0380F2CCD5B7E00D0481C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		45C038112CCD5B7E00D0481C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		45C038132CCD5B7E00D0481C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		45C038162CCD5B7E00D0481C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		45C038182CCD5B7F00D0481C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		45C0381B2CCD5B7F00D0481C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		45C0381D2CCD5B7F00D0481C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -59,10 +81,21 @@
 				45C0380F2CCD5B7E00D0481C /* AppDelegate.swift */,
 				45C038112CCD5B7E00D0481C /* SceneDelegate.swift */,
 				45C038132CCD5B7E00D0481C /* ViewController.swift */,
-				45C038152CCD5B7E00D0481C /* Main.storyboard */,
 				45C038182CCD5B7F00D0481C /* Assets.xcassets */,
 				45C0381A2CCD5B7F00D0481C /* LaunchScreen.storyboard */,
 				45C0381D2CCD5B7F00D0481C /* Info.plist */,
+				454A077A2CD2BA3C0036C3ED /* TabBarController.swift */,
+				454A077E2CD39A7A0036C3ED /* TrackersViewController.swift */,
+				454A077C2CD39A510036C3ED /* StatisticsViewController.swift */,
+				450FBEE22CE1F4060074D8CB /* AddTrackerViewController.swift */,
+				452919342CE21CB2000DA963 /* NewHabitViewController.swift */,
+				450FBEDC2CD9534C0074D8CB /* Tracker.swift */,
+				450FBEDE2CD9535E0074D8CB /* TrackerCategory.swift */,
+				450FBEE02CD9536D0074D8CB /* TrackerRecord.swift */,
+				45AC323D2CE341DF007D4235 /* CustomTableViewCell.swift */,
+				45AC325F2CE3E79B007D4235 /* EmojiCollectionViewCell.swift */,
+				45AC32612CE3E8BA007D4235 /* EmojiCollectionView.swift */,
+				450BC0B72CE4E3F200F0D7DE /* ColorCollectionViewCell.swift */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -127,7 +160,6 @@
 			files = (
 				45C038192CCD5B7F00D0481C /* Assets.xcassets in Resources */,
 				45C0381C2CCD5B7F00D0481C /* Base in Resources */,
-				45C038172CCD5B7E00D0481C /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,23 +170,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				450BC0B82CE4E3F200F0D7DE /* ColorCollectionViewCell.swift in Sources */,
+				45AC32602CE3E79B007D4235 /* EmojiCollectionViewCell.swift in Sources */,
 				45C038142CCD5B7E00D0481C /* ViewController.swift in Sources */,
+				452919352CE21CB2000DA963 /* NewHabitViewController.swift in Sources */,
+				454A077D2CD39A510036C3ED /* StatisticsViewController.swift in Sources */,
+				450FBEDF2CD9535E0074D8CB /* TrackerCategory.swift in Sources */,
+				454A077B2CD2BA3C0036C3ED /* TabBarController.swift in Sources */,
 				45C038102CCD5B7E00D0481C /* AppDelegate.swift in Sources */,
+				45AC323E2CE341DF007D4235 /* CustomTableViewCell.swift in Sources */,
+				450FBEE32CE1F4060074D8CB /* AddTrackerViewController.swift in Sources */,
+				450FBEE12CD9536D0074D8CB /* TrackerRecord.swift in Sources */,
 				45C038122CCD5B7E00D0481C /* SceneDelegate.swift in Sources */,
+				45AC32622CE3E8BA007D4235 /* EmojiCollectionView.swift in Sources */,
+				454A077F2CD39A7A0036C3ED /* TrackersViewController.swift in Sources */,
+				450FBEDD2CD9534C0074D8CB /* Tracker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		45C038152CCD5B7E00D0481C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				45C038162CCD5B7E00D0481C /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		45C0381A2CCD5B7F00D0481C /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -297,9 +333,9 @@
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -325,9 +361,9 @@
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

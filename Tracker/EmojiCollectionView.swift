@@ -8,23 +8,24 @@
 import UIKit
 
 final class EmojiCollectionView: UICollectionReusableView {
+   
     let titleLabel = UILabel()
-    
-    func set(title: String) {
-        titleLabel.text = title
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
         addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+        titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
+        titleLabel.textColor = UIColor(named: "yp-black")
         NSLayoutConstraint.activate([
-                   titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-                   titleLabel.topAnchor.constraint(equalTo: topAnchor),
-                   titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-               ])
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
     }
     
     required init?(coder: NSCoder) {

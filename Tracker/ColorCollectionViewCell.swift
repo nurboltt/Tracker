@@ -8,5 +8,5 @@
 import UIKit
 
 final class ColorCollectionViewCell: UICollectionViewCell {
-    
+    // TODO: Add colorCollectionViewCell in 15 sprint
 }

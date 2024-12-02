@@ -1,26 +1,27 @@
 //
-//  CustomTableViewCell.swift
+//  ScheduleTableViewCell.swift
 //  Tracker
 //
-//  Created by Nurbol on 12.11.2024.
+//  Created by Nurbol on 15.11.2024.
 //
 
 import UIKit
 
-final class CustomTableViewCell: UITableViewCell {
+final class ScheduleTableViewCell: UITableViewCell {
     
     private let titleLabel: UILabel = {
-        let titleLabel = UILabel()
+       let titleLabel = UILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         return titleLabel
     }()
     
-    private let descriptionLabel: UILabel = {
-        let descriptionLabel = UILabel()
-        descriptionLabel.font = UIFont.systemFont(ofSize: 17, weight: .medium)
-        descriptionLabel.textColor = UIColor(named: "yp-gray")
-        return descriptionLabel
+    let switcher: UISwitch = {
+       let switcher = UISwitch()
+        switcher.onTintColor = UIColor(named: "coll-blue")
+        switcher.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
+       return switcher
     }()
+    var onSwitchToggle: ((Bool) -> Void)?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -33,31 +34,33 @@ final class CustomTableViewCell: UITableViewCell {
     }
     
     private func setupCellUI() {
-        accessoryType = .disclosureIndicator
         selectionStyle = .none
         contentView.layer.cornerRadius = 16
         contentView.layer.masksToBounds = true
         backgroundColor = UIColor(named: "yp-light-gray")
         contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         
-        [titleLabel, descriptionLabel].forEach {
+        [titleLabel, switcher].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
         }
         
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            titleLabel.centerYAnchor.constraint(equalTo: switcher.centerYAnchor),
             
-            descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
-            
+            switcher.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 22),
+            switcher.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            switcher.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -22)
         ])
     }
     
-    func configure(with title: String, description: String) {
-        titleLabel.text = title
-        descriptionLabel.text = description
-    }
+    @objc private func switchToggled(_ sender: UISwitch) {
+           onSwitchToggle?(sender.isOn)
+       }
+    
+    func configure(with title: String) {
+           titleLabel.text = title
+       }
+    
 }

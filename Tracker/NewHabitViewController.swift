@@ -7,34 +7,54 @@
 
 import UIKit
 
-final class NewHabitViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource {
+protocol NewHabitViewControllerDelegate: AnyObject {
+    func didCreateTracker(_ tracker: Tracker)
+}
+
+enum TableViewCellType {
+    case category(String)
+    case schedule(String)
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+    var title: String {
+        switch self {
+        case .category:
+            return "Категория"
+        case .schedule:
+            return "Расписание"
+        }
     }
-//    enum viewData {
-//        case emoji([String])
-//        case color([UIColor])
-//    }
     
-    var titleText: String?
+    var description: String {
+        switch self {
+        case .category(let desc):
+            return desc
+        case .schedule(let desc):
+            return desc
+        }
+    }
+}
+
+final class NewHabitViewController: UIViewController {
+    
+    //    enum viewData {
+    //        case emoji([String])
+    //        case color([UIColor])
+    //    }
+    
+    weak var delegate: AddTrackerViewControllerDelegate?
+    weak var newHabitDelegate: NewHabitViewControllerDelegate?
+    var isScheduleSelected = false
+    private var titleText: String?
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private let cellIdentifier = "customCell"
     private let emojiCellIdentifier = "emojiCell"
-    private let cellTitles = ["Категория", "Расписание"]
+    private var cells: [TableViewCellType]
+    private var newSchedule: [WeekDay] = []
     private let emoji: [String] = [
         "🙂", "😻", "🌺", "🐶", "❤️", "😱",
         "😇", "😡", "🥶", "🤔", "🙌", "🍔",
         "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
     ]
-    
-    private let titleLabel: UILabel = {
-        let titleLabel = UILabel()
-        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textAlignment = .center
-        return titleLabel
-    }()
-    
     private let textField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Введите название трекера"
@@ -44,6 +64,7 @@ final class NewHabitViewController: UIViewController, UITableViewDataSource, UIT
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: textField.frame.height))
         textField.leftView = paddingView
         textField.leftViewMode = .always
+        textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         return textField
     }()
     
@@ -53,9 +74,6 @@ final class NewHabitViewController: UIViewController, UITableViewDataSource, UIT
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collectionView
     }()
-    
-    
-    
     private let cancelButton: UIButton = {
         let cancelButton = UIButton()
         cancelButton.setTitle("Отменить", for: .normal)
@@ -72,23 +90,39 @@ final class NewHabitViewController: UIViewController, UITableViewDataSource, UIT
         createButton.setTitle("Создать", for: .normal)
         createButton.backgroundColor = UIColor(named: "yp-gray")
         createButton.layer.cornerRadius = 16
-        createButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         return createButton
     }()
+    
+    init(titleText: String? = nil, cells: [TableViewCellType]) {
+        self.titleText = titleText
+        self.cells = cells
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        collectionView.register(EmojiCollectionViewCell.self, forCellWithReuseIdentifier: emojiCellIdentifier)
-//        collectionView.register(EmojiCollectionView.self, forCellWithReuseIdentifier: "header")
+        updateCreateButtonState()
         collectionView.reloadData()
     }
     
     private func setupUI() {
-        titleLabel.text = titleText
-        view.backgroundColor = .white
         
-        tableView.backgroundColor = .red
+        view.backgroundColor = .white
+        title = titleText
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor(named: "yp-black") ?? .black,
+            .font: UIFont.systemFont(ofSize: 16, weight: .semibold)
+        ]
+        navigationController?.navigationBar.standardAppearance = appearance
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.backgroundColor = .clear
@@ -96,17 +130,16 @@ final class NewHabitViewController: UIViewController, UITableViewDataSource, UIT
         
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.register(EmojiCollectionViewCell.self, forCellWithReuseIdentifier: emojiCellIdentifier)
         
-        [titleLabel, textField, cancelButton, createButton, tableView, collectionView].forEach {
+        [ textField, cancelButton, createButton, tableView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
+            textField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
             textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             textField.heightAnchor.constraint(equalToConstant: 75),
@@ -116,11 +149,11 @@ final class NewHabitViewController: UIViewController, UITableViewDataSource, UIT
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             tableView.heightAnchor.constraint(equalToConstant: 200),
             
-            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 50),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
-            collectionView.heightAnchor.constraint(equalToConstant: 200),
-            collectionView.bottomAnchor.constraint(equalTo: createButton.topAnchor, constant: -18),
+            //            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 50),
+            //            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
+            //            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
+            //            collectionView.heightAnchor.constraint(equalToConstant: 200),
+            //            collectionView.bottomAnchor.constraint(equalTo: createButton.topAnchor, constant: -18),
             
             cancelButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             cancelButton.trailingAnchor.constraint(equalTo: createButton.leadingAnchor, constant: -8),
@@ -132,86 +165,157 @@ final class NewHabitViewController: UIViewController, UITableViewDataSource, UIT
             createButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -34),
             createButton.heightAnchor.constraint(equalToConstant: 60)
         ])
-       
+        
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        emoji.count
-//        switch viewData {
-//        case .emoji(let data):
-//            return data.count
-//        case .color(let data):
-//            return data.count
-//        }
+    private func updateCellDescription(in cells: inout [TableViewCellType], at index: Int, with newDescription: String) {
+        if case .schedule = cells[index] {
+            cells[index] = .schedule(newDescription)
+        }
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: emojiCellIdentifier, for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
-        cell.titleLabel.text = emoji[indexPath.row]
-//                switch viewData {
-//                case .emoji(let data):
-//                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: emojiCellIdentifier, for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
-//                cell.titleLabel.text = data[indexPath.row]
-//                case .color(let data):
-//                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: emojiCellIdentifier, for: indexPath) as? ColorCollectionViewCell else { return UICollectionViewCell() }
-//                   cell.titleLabel.text = data[indexPath.row]
-//        
-//    }
-        return cell
+    @objc private func textFieldDidChange() {
+        updateCreateButtonState()
+        guard let text = textField.text, !text.isEmpty else {
+            createButton.backgroundColor = UIColor(named: "yp-gray")
+            return
+        }
+        createButton.backgroundColor = UIColor(named: "yp-black")
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (collectionView.bounds.width - 10) / 6, height: 50)
-    }
-    
-    
-    @objc private func habitButtonTapped() {
-        let newHabitViewController = NewHabitViewController()
-        newHabitViewController.modalPresentationStyle = .popover
-        present(newHabitViewController, animated: true, completion: nil)
-        print("Привычка tapped")
-    }
-    
-    @objc private func irregularEventButtonTapped() {
-        print("Нерегулярные событие tapped")
+    private func updateCreateButtonState() {
+        createButton.isEnabled = !(textField.text?.isEmpty ?? true)
     }
     
     @objc private func cancelButtonTapped() {
+        print("cancel button tapped")
         dismiss(animated: true, completion: nil)
     }
     
+    @objc private func createButtonTapped() {
+        
+        guard let trackerTitle = textField.text, !trackerTitle.isEmpty else {
+            return
+        }
+        
+        let newTracker = Tracker(id: UUID(), title: trackerTitle, color: .green, emoji: "❤️", schedule: newSchedule)
+        newHabitDelegate?.didCreateTracker(newTracker)
+
+        print("create button tapped")
+        dismiss(animated: true, completion: nil)
+    }
+    
+}
+
+extension NewHabitViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        cellTitles.count
+        cells.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? CustomTableViewCell else {
             return UITableViewCell()
         }
-        cell.configure(with: cellTitles[indexPath.row])
+        cell.configure(with: cells[indexPath.row].title, description: cells[indexPath.row].description)
         return cell
     }
     
+    
+}
+
+extension NewHabitViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
     
-    @objc private func actionButtonTapped() {
-        let modalViewController = AddTrackerViewController()
-        modalViewController.modalPresentationStyle = .popover
-        present(modalViewController, animated: true, completion: nil)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 {
+            let categoryViewController = CategoryTableViewController(titleText: "Категория")
+            categoryViewController.delegate = self
+            let vc = UINavigationController(rootViewController: categoryViewController)
+            vc.modalPresentationStyle = .popover
+            present(vc, animated: true, completion: nil)
+        } else {
+            let scheduleTableViewController = ScheduleTableViewController(titleText: "Расписание")
+            scheduleTableViewController.delegate = self
+            let vc = UINavigationController(rootViewController: scheduleTableViewController)
+            vc.modalPresentationStyle = .popover
+            present(vc, animated: true, completion: nil)
+        }
+        
     }
-    
 }
 
-//extension NewHabitViewController: UICollectionViewDataSource {
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//
-//    }
-//
-//
-//}
+extension NewHabitViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        emoji.count
+        //        switch viewData {
+        //        case .emoji(let data):
+        //            return data.count
+        //        case .color(let data):
+        //            return data.count
+        //        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: emojiCellIdentifier, for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
+        cell.titleLabel.text = emoji[indexPath.row]
+        //                switch viewData {
+        //                case .emoji(let data):
+        //                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: emojiCellIdentifier, for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
+        //                cell.titleLabel.text = data[indexPath.row]
+        //                case .color(let data):
+        //                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: emojiCellIdentifier, for: indexPath) as? ColorCollectionViewCell else { return UICollectionViewCell() }
+        //                   cell.titleLabel.text = data[indexPath.row]
+        //
+        //    }
+        return cell
+    }
+}
 
 extension NewHabitViewController: UICollectionViewDelegateFlowLayout {
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: (collectionView.bounds.width - 10) / 6, height: 50)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+}
+
+
+extension NewHabitViewController: ScheduleTableViewControllerDelegate {
+    func saveSchedule(selectedDays: [WeekDay]) {
+        
+        newSchedule = selectedDays
+        
+        let daysString = selectedDays.map { $0.shortName }.joined(separator: ", ")
+        
+        if let index = cells.firstIndex(where: {
+            if case .schedule = $0 { return true }
+            return false
+        }) {
+            updateCellDescription(in: &cells, at: index, with: daysString)
+        }
+        tableView.reloadData()
+    }
+}
+
+extension NewHabitViewController: CategoryTableViewControllerDelegate {
+    func addCategory(category: String) {
+        if let index = cells.firstIndex(where: {
+            if case .category = $0 { return true }
+            return false
+        }) {
+            cells[index] = .category(category)
+            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+        }
+    }
+}
+
+
+extension NewHabitViewController: AddTrackerViewControllerDelegate {
+    func didOpenNewModal(_ button: UIButton) { }
 }

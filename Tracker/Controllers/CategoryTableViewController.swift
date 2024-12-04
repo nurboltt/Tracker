@@ -24,9 +24,8 @@ final class CategoryTableViewController: UIViewController {
     private var titleText: String?
     private var selectedCategory: String?
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
-    private let categoryCellIdentifier = "categoryCellIdentifier"
-    
-    private let addButton: UIButton = {
+   
+    private lazy var addButton: UIButton = {
         let addButton = UIButton()
         addButton.setTitle("Добавить категорию", for: .normal)
         addButton.backgroundColor = UIColor(named: "yp-black")
@@ -56,7 +55,7 @@ final class CategoryTableViewController: UIViewController {
     }
     
     private func setupUI() {
-        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: categoryCellIdentifier)
+        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.categoryCellIdentifier)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .white
@@ -101,7 +100,7 @@ extension CategoryTableViewController: UITableViewDelegate {
 extension CategoryTableViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: categoryCellIdentifier, for: indexPath) as? CategoryTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.categoryCellIdentifier, for: indexPath) as? CategoryTableViewCell else {
             return UITableViewCell()
         }
         let category = FakeCategories.allCases[indexPath.row]

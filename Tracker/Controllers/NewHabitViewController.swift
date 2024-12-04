@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol NewHabitViewControllerDelegate: AnyObject {
-    func didCreateTracker(_ tracker: Tracker)
-}
-
 enum TableViewCellType {
     case category(String)
     case schedule(String)
@@ -36,18 +32,11 @@ enum TableViewCellType {
 
 final class NewHabitViewController: UIViewController {
     
-    //    enum viewData {
-    //        case emoji([String])
-    //        case color([UIColor])
-    //    }
+    var trackerSelectedClosure: ((Tracker) -> Void)?
     
-    weak var delegate: AddTrackerViewControllerDelegate?
-    weak var newHabitDelegate: NewHabitViewControllerDelegate?
     var isScheduleSelected = false
     private var titleText: String?
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
-    private let cellIdentifier = "customCell"
-    private let emojiCellIdentifier = "emojiCell"
     private var cells: [TableViewCellType]
     private var newSchedule: [WeekDay] = []
     private let emoji: [String] = [
@@ -55,7 +44,7 @@ final class NewHabitViewController: UIViewController {
         "😇", "😡", "🥶", "🤔", "🙌", "🍔",
         "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
     ]
-    private let textField: UITextField = {
+    private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Введите название трекера"
         textField.backgroundColor = UIColor(named: "yp-light-gray")
@@ -68,13 +57,13 @@ final class NewHabitViewController: UIViewController {
         return textField
     }()
     
-    private let collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 100, height: 50)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collectionView
     }()
-    private let cancelButton: UIButton = {
+    private lazy var cancelButton: UIButton = {
         let cancelButton = UIButton()
         cancelButton.setTitle("Отменить", for: .normal)
         cancelButton.setTitleColor(UIColor(named: "yp-light-red"), for: .normal)
@@ -85,7 +74,7 @@ final class NewHabitViewController: UIViewController {
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         return cancelButton
     }()
-    private let createButton: UIButton = {
+    private lazy var createButton: UIButton = {
         let createButton = UIButton()
         createButton.setTitle("Создать", for: .normal)
         createButton.backgroundColor = UIColor(named: "yp-gray")
@@ -126,11 +115,11 @@ final class NewHabitViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.backgroundColor = .clear
-        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CustomTableViewCell.cellIdentifier)
         
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(EmojiCollectionViewCell.self, forCellWithReuseIdentifier: emojiCellIdentifier)
+        collectionView.register(EmojiCollectionViewCell.self, forCellWithReuseIdentifier: EmojiCollectionViewCell.emojiCellIdentifier)
         
         [ textField, cancelButton, createButton, tableView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -149,6 +138,7 @@ final class NewHabitViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             tableView.heightAnchor.constraint(equalToConstant: 200),
             
+            // TODO: Добавить в 15 спринте
             //            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 50),
             //            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
             //            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
@@ -198,13 +188,24 @@ final class NewHabitViewController: UIViewController {
             return
         }
         
-        let newTracker = Tracker(id: UUID(), title: trackerTitle, color: .green, emoji: "❤️", schedule: newSchedule)
-        newHabitDelegate?.didCreateTracker(newTracker)
-
+        let isIrregular = cells.firstIndex {
+            if case .schedule = $0 { return true }
+            return false
+        } == nil
+        
+        let newTracker = Tracker(
+            id: UUID(),
+            title: trackerTitle,
+            color: UIColor(named: "coll-orange") ?? .orange,
+            emoji: "❤️",
+            schedule: isIrregular ? [] : newSchedule,
+            eventDate: isIrregular ? Date() : nil
+        )
+        trackerSelectedClosure?(newTracker)
+        
         print("create button tapped")
         dismiss(animated: true, completion: nil)
     }
-    
 }
 
 extension NewHabitViewController: UITableViewDataSource {
@@ -214,7 +215,7 @@ extension NewHabitViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? CustomTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.cellIdentifier, for: indexPath) as? CustomTableViewCell else {
             return UITableViewCell()
         }
         cell.configure(with: cells[indexPath.row].title, description: cells[indexPath.row].description)
@@ -231,11 +232,12 @@ extension NewHabitViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            let categoryViewController = CategoryTableViewController(titleText: "Категория")
-            categoryViewController.delegate = self
-            let vc = UINavigationController(rootViewController: categoryViewController)
-            vc.modalPresentationStyle = .popover
-            present(vc, animated: true, completion: nil)
+            // TODO: Добавить в 15 спринте
+            //            let categoryViewController = CategoryTableViewController(titleText: "Категория")
+            //            categoryViewController.delegate = self
+            //            let vc = UINavigationController(rootViewController: categoryViewController)
+            //            vc.modalPresentationStyle = .popover
+            //            present(vc, animated: true, completion: nil)
         } else {
             let scheduleTableViewController = ScheduleTableViewController(titleText: "Расписание")
             scheduleTableViewController.delegate = self
@@ -250,26 +252,11 @@ extension NewHabitViewController: UITableViewDelegate {
 extension NewHabitViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         emoji.count
-        //        switch viewData {
-        //        case .emoji(let data):
-        //            return data.count
-        //        case .color(let data):
-        //            return data.count
-        //        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: emojiCellIdentifier, for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCollectionViewCell.emojiCellIdentifier, for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
         cell.titleLabel.text = emoji[indexPath.row]
-        //                switch viewData {
-        //                case .emoji(let data):
-        //                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: emojiCellIdentifier, for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
-        //                cell.titleLabel.text = data[indexPath.row]
-        //                case .color(let data):
-        //                    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: emojiCellIdentifier, for: indexPath) as? ColorCollectionViewCell else { return UICollectionViewCell() }
-        //                   cell.titleLabel.text = data[indexPath.row]
-        //
-        //    }
         return cell
     }
 }
@@ -290,9 +277,7 @@ extension NewHabitViewController: ScheduleTableViewControllerDelegate {
     func saveSchedule(selectedDays: [WeekDay]) {
         
         newSchedule = selectedDays
-        
         let daysString = selectedDays.map { $0.shortName }.joined(separator: ", ")
-        
         if let index = cells.firstIndex(where: {
             if case .schedule = $0 { return true }
             return false
@@ -313,9 +298,4 @@ extension NewHabitViewController: CategoryTableViewControllerDelegate {
             tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
         }
     }
-}
-
-
-extension NewHabitViewController: AddTrackerViewControllerDelegate {
-    func didOpenNewModal(_ button: UIButton) { }
 }

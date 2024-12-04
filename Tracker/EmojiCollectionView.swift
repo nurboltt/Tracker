@@ -8,7 +8,7 @@
 import UIKit
 
 final class EmojiCollectionView: UICollectionReusableView {
-   
+    
     let titleLabel = UILabel()
     
     override init(frame: CGRect) {

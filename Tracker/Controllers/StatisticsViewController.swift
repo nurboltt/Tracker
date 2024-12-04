@@ -9,7 +9,7 @@ import UIKit
 
 final class StatisticsViewController: UIViewController {
     
-    private let titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = "Статистика"
         titleLabel.textColor =  UIColor(named: "yp-black")
@@ -17,13 +17,13 @@ final class StatisticsViewController: UIViewController {
         return titleLabel
     }()
     
-    private let imageView: UIImageView = {
+    private lazy var imageView: UIImageView = {
         let image = UIImage(named: "empty-stat")
         let view = UIImageView(image: image)
         return view
     }()
     
-    private let emptyLabel: UILabel = {
+    private lazy var emptyLabel: UILabel = {
         let emptyLabel = UILabel()
         emptyLabel.text = "Анализировать пока нечего"
         emptyLabel.textColor = UIColor(named: "yp-black")
@@ -33,7 +33,6 @@ final class StatisticsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         setupUI()
     }
     

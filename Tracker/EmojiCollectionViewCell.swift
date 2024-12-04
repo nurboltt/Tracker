@@ -9,6 +9,7 @@ import UIKit
 
 final class EmojiCollectionViewCell: UICollectionViewCell {
     
+    static let emojiCellIdentifier = "emojiCell"
     let titleLabel = UILabel()
     
     override init(frame: CGRect) {

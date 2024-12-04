@@ -9,13 +9,14 @@ import UIKit
 
 final class ScheduleTableViewCell: UITableViewCell {
     
-    private let titleLabel: UILabel = {
+    static let scheduleCellIdentifier = "scheduleCellIdentifier"
+    private lazy var titleLabel: UILabel = {
        let titleLabel = UILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         return titleLabel
     }()
     
-    let switcher: UISwitch = {
+    private(set) lazy var switcher: UISwitch = {
        let switcher = UISwitch()
         switcher.onTintColor = UIColor(named: "coll-blue")
         switcher.addTarget(self, action: #selector(switchToggled), for: .valueChanged)

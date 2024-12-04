@@ -13,6 +13,9 @@ protocol TrackerCellDelegate: AnyObject {
 }
 
 final class TrackerCell: UICollectionViewCell {
+    
+    static let trackerCellIdentifier = "trackerCellIdentifier"
+    
     private let mainView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 16
@@ -41,7 +44,7 @@ final class TrackerCell: UICollectionViewCell {
     }()
     
     private let stackView: UIStackView = {
-       let stack = UIStackView()
+        let stack = UIStackView()
         stack.axis = .horizontal
         stack.distribution = .fill
         stack.spacing = 8
@@ -80,27 +83,28 @@ final class TrackerCell: UICollectionViewCell {
         isCompletedToday: Bool,
         completedDays: Int,
         indexPath: IndexPath) {
-        self.trackerId = tracker.id
-        self.isCompletedToday = isCompletedToday
-        self.indexPath = indexPath
-        
-        let color = tracker.color
-        addElements()
-        setupConstraints()
-        
-        mainView.backgroundColor = color
-        plusButton.backgroundColor = color
-        
-        taskTitleLabel.text = tracker.title
-        emojiLabel.text = tracker.emoji
-        
-        let wordDay = pluralizeDays(completedDays)
-        counterDayLabel.text = "\(wordDay)"
-        
-        let image = isCompletedToday ? doneImage : plusImage
-        plusButton.setImage(image, for: .normal)
-        
-    }
+            self.trackerId = tracker.id
+            self.isCompletedToday = isCompletedToday
+            self.indexPath = indexPath
+            
+            let color = tracker.color
+            addElements()
+            setupConstraints()
+            
+            mainView.backgroundColor = color
+            plusButton.backgroundColor = color
+            
+            taskTitleLabel.text = tracker.title
+            emojiLabel.text = tracker.emoji
+            
+            let wordDay = pluralizeDays(completedDays)
+            counterDayLabel.text = "\(wordDay)"
+            
+            plusButton.alpha = isCompletedToday ? 0.3 : 1.0
+            let image = isCompletedToday ? doneImage : plusImage
+            plusButton.setImage(image, for: .normal)
+            
+        }
     
     private func addElements() {
         contentView.addSubview(mainView)

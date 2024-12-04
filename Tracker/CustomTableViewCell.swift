@@ -9,13 +9,14 @@ import UIKit
 
 final class CustomTableViewCell: UITableViewCell {
     
-    private let titleLabel: UILabel = {
+    static let cellIdentifier = "customCell"
+    private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         return titleLabel
     }()
     
-    private let descriptionLabel: UILabel = {
+    private lazy var descriptionLabel: UILabel = {
         let descriptionLabel = UILabel()
         descriptionLabel.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         descriptionLabel.textColor = UIColor(named: "yp-gray")
@@ -56,7 +57,7 @@ final class CustomTableViewCell: UITableViewCell {
         ])
     }
     
-    func configure(with title: String, description: String) {
+     func configure(with title: String, description: String) {
         titleLabel.text = title
         descriptionLabel.text = description
     }

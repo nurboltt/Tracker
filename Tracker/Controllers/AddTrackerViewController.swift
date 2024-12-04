@@ -7,37 +7,32 @@
 
 import UIKit
 
-protocol AddTrackerViewControllerDelegate: AnyObject {
-    func didOpenNewModal(_ button: UIButton)
-}
-
 final class AddTrackerViewController: UIViewController {
     
-    private let habitButton: UIButton = {
-       let habitButton = UIButton()
+    var trackerSelectedClosure: ((Tracker) -> Void)?
+    
+    private lazy var habitButton: UIButton = {
+        let habitButton = UIButton()
         habitButton.setTitle("Привычка", for: .normal)
         habitButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         habitButton.setTitleColor(.white, for: .normal)
         habitButton.backgroundColor = .black
         habitButton.layer.cornerRadius = 16
-        habitButton.tag = 0
         habitButton.addTarget(self, action: #selector(habitButtonTapped), for: .touchUpInside)
         return habitButton
     }()
     
-    private let irregularEventButton: UIButton = {
-       let irregularEventButton = UIButton()
+    private lazy var irregularEventButton: UIButton = {
+        let irregularEventButton = UIButton()
         irregularEventButton.setTitle("Нерегулярное событие", for: .normal)
         irregularEventButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         irregularEventButton.setTitleColor(.white, for: .normal)
         irregularEventButton.backgroundColor = .black
         irregularEventButton.layer.cornerRadius = 16
-        irregularEventButton.tag = 1
-        irregularEventButton.addTarget(self, action: #selector(habitButtonTapped), for: .touchUpInside)
+        irregularEventButton.addTarget(self, action: #selector(irregularButtonTapped), for: .touchUpInside)
         return irregularEventButton
     }()
     
-    weak var delegate: AddTrackerViewControllerDelegate?
     private var titleText: String?
     
     override func viewDidLoad() {
@@ -85,9 +80,21 @@ final class AddTrackerViewController: UIViewController {
         ])
     }
     
+    @objc func irregularButtonTapped(_ sender: UIButton) {
+        let newHabitViewController = NewHabitViewController(titleText: "Новое нерегулярное событие", cells: [.category("Важное")])
+        newHabitViewController.trackerSelectedClosure = trackerSelectedClosure
+        
+        let navigationController = UINavigationController(rootViewController: newHabitViewController)
+        navigationController.modalPresentationStyle = .popover
+        present(navigationController, animated: true)
+    }
+    
     @objc private func habitButtonTapped(_ sender: UIButton) {
-        dismiss(animated: true) { [weak self] in
-            self?.delegate?.didOpenNewModal(sender)
-        }
+        let newHabitViewController = NewHabitViewController(titleText: "Новая привычка", cells: [.category("Важное"), .schedule("")])
+        newHabitViewController.trackerSelectedClosure = trackerSelectedClosure
+        
+        let navigationController = UINavigationController(rootViewController: newHabitViewController)
+        navigationController.modalPresentationStyle = .popover
+        present(navigationController, animated: true)
     }
 }

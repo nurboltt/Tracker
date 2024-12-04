@@ -9,8 +9,9 @@ import UIKit
 
 final class CategoryTableViewCell: UITableViewCell {
     
-    private let titleLabel: UILabel = {
-       let titleLabel = UILabel()
+    static let categoryCellIdentifier = "categoryCellIdentifier"
+    private lazy var titleLabel: UILabel = {
+        let titleLabel = UILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         return titleLabel
     }()
@@ -43,9 +44,9 @@ final class CategoryTableViewCell: UITableViewCell {
             
         ])
     }
-        
+    
     func configure(with title: String) {
-           titleLabel.text = title
-       }
+        titleLabel.text = title
+    }
 }
 

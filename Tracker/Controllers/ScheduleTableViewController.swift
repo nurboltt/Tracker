@@ -36,23 +36,23 @@ enum WeekDay: String, CaseIterable {
     }
     
     var numberValue: Int {
-            switch self {
-            case .monday:
-                return 1
-            case .tuesday:
-                return 2
-            case .wednesday:
-                return 3
-            case .thursday:
-                return 4
-            case .friday:
-                return 5
-            case .saturday:
-                return 6
-            case .sunday:
-                return 7
-            }
+        switch self {
+        case .monday:
+            return 2
+        case .tuesday:
+            return 3
+        case .wednesday:
+            return 4
+        case .thursday:
+            return 5
+        case .friday:
+            return 6
+        case .saturday:
+            return 7
+        case .sunday:
+            return 1
         }
+    }
 }
 
 protocol ScheduleTableViewControllerDelegate: AnyObject {
@@ -65,8 +65,7 @@ final class ScheduleTableViewController: UIViewController {
     private var selectedDays: [WeekDay] = []
     private var titleText: String?
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
-    private let scheduleCellIdentifier = "scheduleCellIdentifier"
-    private let doneButton: UIButton = {
+    private lazy var doneButton: UIButton = {
         let doneButton = UIButton()
         doneButton.setTitle("Готово", for: .normal)
         doneButton.backgroundColor = UIColor(named: "yp-black")
@@ -91,7 +90,7 @@ final class ScheduleTableViewController: UIViewController {
     }
     
     private func setupUI() {
-        tableView.register(ScheduleTableViewCell.self, forCellReuseIdentifier: scheduleCellIdentifier)
+        tableView.register(ScheduleTableViewCell.self, forCellReuseIdentifier: ScheduleTableViewCell.scheduleCellIdentifier)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .white
@@ -142,7 +141,7 @@ extension ScheduleTableViewController: UITableViewDelegate {
 extension ScheduleTableViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: scheduleCellIdentifier, for: indexPath) as? ScheduleTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ScheduleTableViewCell.scheduleCellIdentifier, for: indexPath) as? ScheduleTableViewCell else {
             return UITableViewCell()
         }
         let weekDay = WeekDay.allCases[indexPath.row]

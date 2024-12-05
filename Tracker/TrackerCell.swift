@@ -73,7 +73,7 @@ final class TrackerCell: UICollectionViewCell {
         return button
     }()
     
-    private let doneImage = UIImage(named: "done")
+    private let doneImage = UIImage(named: "Done")
     
     private let plusImage: UIImage = {
         let pointSize = UIImage.SymbolConfiguration(pointSize: 11)

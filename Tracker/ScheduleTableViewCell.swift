@@ -10,17 +10,17 @@ import UIKit
 final class ScheduleTableViewCell: UITableViewCell {
     
     static let scheduleCellIdentifier = "scheduleCellIdentifier"
-    private lazy var titleLabel: UILabel = {
-       let titleLabel = UILabel()
-        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+    private let titleLabel: UILabel = {
+        let titleLabel = UILabel()
+        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         return titleLabel
     }()
     
     private(set) lazy var switcher: UISwitch = {
-       let switcher = UISwitch()
+        let switcher = UISwitch()
         switcher.onTintColor = UIColor(named: "coll-blue")
         switcher.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
-       return switcher
+        return switcher
     }()
     var onSwitchToggle: ((Bool) -> Void)?
     
@@ -57,11 +57,10 @@ final class ScheduleTableViewCell: UITableViewCell {
     }
     
     @objc private func switchToggled(_ sender: UISwitch) {
-           onSwitchToggle?(sender.isOn)
-       }
+        onSwitchToggle?(sender.isOn)
+    }
     
     func configure(with title: String) {
-           titleLabel.text = title
-       }
-    
+        titleLabel.text = title
+    }
 }

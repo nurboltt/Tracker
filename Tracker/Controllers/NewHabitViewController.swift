@@ -7,30 +7,7 @@
 
 import UIKit
 
-enum TableViewCellType {
-    case category(String)
-    case schedule(String)
-    
-    var title: String {
-        switch self {
-        case .category:
-            return "Категория"
-        case .schedule:
-            return "Расписание"
-        }
-    }
-    
-    var description: String {
-        switch self {
-        case .category(let desc):
-            return desc
-        case .schedule(let desc):
-            return desc
-        }
-    }
-}
-
-final class NewHabitViewController: UIViewController {
+final class NewHabitViewController: UIViewController, UITextFieldDelegate {
     
     var trackerSelectedClosure: ((Tracker) -> Void)?
     
@@ -39,19 +16,16 @@ final class NewHabitViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private var cells: [TableViewCellType]
     private var newSchedule: [WeekDay] = []
-    private let emoji: [String] = [
-        "🙂", "😻", "🌺", "🐶", "❤️", "😱",
-        "😇", "😡", "🥶", "🤔", "🙌", "🍔",
-        "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
-    ]
+ 
     private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Введите название трекера"
         textField.backgroundColor = UIColor(named: "yp-light-gray")
         textField.layer.cornerRadius = 17
-        textField.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: textField.frame.height))
         textField.leftView = paddingView
+        textField.delegate = self
         textField.leftViewMode = .always
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         return textField
@@ -138,13 +112,6 @@ final class NewHabitViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             tableView.heightAnchor.constraint(equalToConstant: 200),
             
-            // TODO: Добавить в 15 спринте
-            //            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 50),
-            //            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
-            //            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
-            //            collectionView.heightAnchor.constraint(equalToConstant: 200),
-            //            collectionView.bottomAnchor.constraint(equalTo: createButton.topAnchor, constant: -18),
-            
             cancelButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             cancelButton.trailingAnchor.constraint(equalTo: createButton.leadingAnchor, constant: -8),
             cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -34),
@@ -155,13 +122,17 @@ final class NewHabitViewController: UIViewController {
             createButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -34),
             createButton.heightAnchor.constraint(equalToConstant: 60)
         ])
-        
     }
     
     private func updateCellDescription(in cells: inout [TableViewCellType], at index: Int, with newDescription: String) {
         if case .schedule = cells[index] {
             cells[index] = .schedule(newDescription)
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
     @objc private func textFieldDidChange() {
@@ -178,7 +149,6 @@ final class NewHabitViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped() {
-        print("cancel button tapped")
         dismiss(animated: true, completion: nil)
     }
     
@@ -203,7 +173,6 @@ final class NewHabitViewController: UIViewController {
         )
         trackerSelectedClosure?(newTracker)
         
-        print("create button tapped")
         dismiss(animated: true, completion: nil)
     }
 }
@@ -231,32 +200,24 @@ extension NewHabitViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 0 {
-            // TODO: Добавить в 15 спринте
-            //            let categoryViewController = CategoryTableViewController(titleText: "Категория")
-            //            categoryViewController.delegate = self
-            //            let vc = UINavigationController(rootViewController: categoryViewController)
-            //            vc.modalPresentationStyle = .popover
-            //            present(vc, animated: true, completion: nil)
-        } else {
+        if indexPath.row == 1 {
             let scheduleTableViewController = ScheduleTableViewController(titleText: "Расписание")
             scheduleTableViewController.delegate = self
             let vc = UINavigationController(rootViewController: scheduleTableViewController)
             vc.modalPresentationStyle = .popover
             present(vc, animated: true, completion: nil)
         }
-        
     }
 }
 
 extension NewHabitViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        emoji.count
+        Constants.emoji.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCollectionViewCell.emojiCellIdentifier, for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
-        cell.titleLabel.text = emoji[indexPath.row]
+        cell.titleLabel.text = Constants.emoji[indexPath.row]
         return cell
     }
 }

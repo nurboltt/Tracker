@@ -12,36 +12,22 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private var categories: [TrackerCategory] = []
     private var visibleCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
-    var currentDate: Date = Date()
+    private var currentDate: Date = Date()
     
     private let countNumber: CGFloat = 2
-  
-    private let colors = [ UIColor(named: "coll-green"), UIColor(named: "coll-orange")]
     
-    private lazy var headerView: UIView = {
+    private let headerView: UIView = {
         let view = UIView()
         return view
     }()
     
     private let searchController = UISearchController(searchResultsController: nil)
-    private lazy var plusButton: UIButton = {
+    private let plusButton: UIButton = {
         let plusButton = UIButton(type: .system)
         plusButton.setImage(UIImage(named: "addButton"), for: .normal)
         plusButton.tintColor = UIColor(named: "yp-black")
         plusButton.addTarget(self, action: #selector(addTask), for: .touchUpInside)
         return plusButton
-    }()
-    
-    private lazy var dateLabel: UILabel = {
-        let dateLabel = UILabel()
-        dateLabel.backgroundColor = UIColor(named: "yp-light-gray")
-        dateLabel.font = .systemFont(ofSize: 17, weight: .medium)
-        dateLabel.textAlignment = .center
-        dateLabel.textColor = .black
-        dateLabel.clipsToBounds = true
-        dateLabel.layer.cornerRadius = 8
-        dateLabel.layer.zPosition = 10
-        return dateLabel
     }()
     private lazy var datePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
@@ -53,18 +39,18 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         datePicker.clipsToBounds = true
         datePicker.layer.cornerRadius = 8
         datePicker.tintColor = .blue
-        datePicker.maximumDate = Date()
+        datePicker.maximumDate = currentDate
         datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
         return datePicker
     }()
-    private lazy var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = "Трекеры"
         titleLabel.textColor = .black
         titleLabel.font = .systemFont(ofSize: 34, weight: .bold)
         return titleLabel
     }()
-    private lazy var searchStackView: UIStackView = {
+    private let searchStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.distribution = .fill
@@ -92,7 +78,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         return textField
     }()
     
-    private lazy var cancelButton: UIButton = {
+    private let cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Отменить", for: .normal)
         button.tintColor = .blue
@@ -101,18 +87,18 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
-    private lazy var placeHolderView: UIView = {
+    private let placeHolderView: UIView = {
         let placeHolderView = UIView()
         placeHolderView.backgroundColor = .lightGray
         return placeHolderView
     }()
     
-    private lazy var imageView: UIImageView = {
+    private let imageView: UIImageView = {
         let image = UIImage(named: "empty-tracker")
         let view = UIImageView(image: image)
         return view
     }()
-    private lazy var emptyLabel: UILabel = {
+    private let emptyLabel: UILabel = {
         let emptyLabel = UILabel()
         emptyLabel.text = "Что будем отслеживать?"
         emptyLabel.textColor = .black
@@ -146,22 +132,23 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        dateChanged()
+        dateChanged(datePicker)
         setupConstraints()
         reloadData()
     }
     
-    @objc private func dateChanged() {
+    @objc private func dateChanged(_ sender: UIDatePicker) {
+         currentDate = sender.date
         reloadVisibleCategories(text: searchTextField.text, date: datePicker.date)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
     @objc private func addTask() {
         let addTrackerViewController = AddTrackerViewController(titleText: "Создание трекера")
-//        addTrackerViewController.trackerSelectedClosure = { [weak self] tracker in
-//            self?.dismiss(animated: true)
-//            self?.categories.append(contentsOf: [TrackerCategory(title: "Важное", trackers: [tracker])])
-//            self?.reloadVisibleCategories(text: nil, date: self?.datePicker.date ?? Date())
-//        }
         addTrackerViewController.trackerSelectedClosure = { [weak self] tracker in
             self?.dismiss(animated: true)
             
@@ -177,7 +164,7 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
             }
             self.reloadVisibleCategories(text: nil, date: self.datePicker.date)
         }
-
+        
         let vc = UINavigationController(rootViewController: addTrackerViewController)
         vc.modalPresentationStyle = .popover
         present(vc, animated: true, completion: nil)
@@ -191,17 +178,16 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
             let trackers = category.trackers.filter { tracker in
                 if let eventDate = tracker.eventDate {
                     return calendar.isDate(eventDate, inSameDayAs: date)
-                } else {
+                } else if !tracker.schedule.isEmpty {
                     return tracker
                         .schedule
                         .map { $0.numberValue }
                         .contains(filterWeekday)
                 }
+                return false
             }
             
-            if trackers.isEmpty {
-                return nil
-            }
+            guard !trackers.isEmpty else { return nil }
             
             return  TrackerCategory(
                 title: category.title,
@@ -219,7 +205,6 @@ final class TrackersViewController: UIViewController, UITextFieldDelegate {
     private func reloadData() {
         reloadVisibleCategories(text: nil, date: datePicker.date)
         guard !visibleCategories.isEmpty else {
-            print("Visible categories are empty!")
             return
         }
         collectionView.reloadData()
@@ -299,12 +284,10 @@ extension TrackersViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: TrackerCell.trackerCellIdentifier,
-                for: indexPath
-            ) as? TrackerCell
-        else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: TrackerCell.trackerCellIdentifier,
+            for: indexPath
+        ) as? TrackerCell else { return UICollectionViewCell() }
         cell.contentView.backgroundColor = .white
         cell.prepareForReuse()
         
@@ -323,9 +306,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         } else {
             print("Invalid index path: \(indexPath)")
         }
-        
         cell.delegate = self
-        
         return cell
     }
     
@@ -377,7 +358,9 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 extension TrackersViewController: TrackerCellDelegate {
     func completeTracker(id: UUID, at indexPath: IndexPath) {
         let trackerRecord = TrackerRecord(trackerId: id, date: datePicker.date)
-        completedTrackers.append(trackerRecord)
+        if !completedTrackers.contains(where: { $0.trackerId == id && Calendar.current.isDate($0.date, inSameDayAs: datePicker.date)}) {
+            completedTrackers.append(trackerRecord)
+        }
         collectionView.reloadItems(at: [indexPath])
     }
     

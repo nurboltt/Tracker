@@ -73,6 +73,14 @@ final class TrackerCell: UICollectionViewCell {
         return button
     }()
     
+    private let doneImage = UIImage(named: "done")
+    
+    private let plusImage: UIImage = {
+        let pointSize = UIImage.SymbolConfiguration(pointSize: 11)
+        let image = UIImage(systemName: "plus",withConfiguration: pointSize) ?? UIImage()
+        return image
+    }()
+    
     weak var delegate: TrackerCellDelegate?
     private var isCompletedToday: Bool = false
     private var trackerId: UUID?
@@ -82,29 +90,29 @@ final class TrackerCell: UICollectionViewCell {
         with tracker: Tracker,
         isCompletedToday: Bool,
         completedDays: Int,
-        indexPath: IndexPath) {
-            self.trackerId = tracker.id
-            self.isCompletedToday = isCompletedToday
-            self.indexPath = indexPath
-            
-            let color = tracker.color
-            addElements()
-            setupConstraints()
-            
-            mainView.backgroundColor = color
-            plusButton.backgroundColor = color
-            
-            taskTitleLabel.text = tracker.title
-            emojiLabel.text = tracker.emoji
-            
-            let wordDay = pluralizeDays(completedDays)
-            counterDayLabel.text = "\(wordDay)"
-            
-            plusButton.alpha = isCompletedToday ? 0.3 : 1.0
-            let image = isCompletedToday ? doneImage : plusImage
-            plusButton.setImage(image, for: .normal)
-            
-        }
+        indexPath: IndexPath
+    ) {
+        self.trackerId = tracker.id
+        self.isCompletedToday = isCompletedToday
+        self.indexPath = indexPath
+        
+        let color = tracker.color
+        addElements()
+        setupConstraints()
+        
+        mainView.backgroundColor = color
+        plusButton.backgroundColor = color
+        
+        taskTitleLabel.text = tracker.title
+        emojiLabel.text = tracker.emoji
+        
+        let wordDay = pluralizeDays(completedDays)
+        counterDayLabel.text = "\(wordDay)"
+        
+        plusButton.alpha = isCompletedToday ? 0.3 : 1.0
+        let image = isCompletedToday ? doneImage : plusImage
+        plusButton.setImage(image, for: .normal)
+      }
     
     private func addElements() {
         contentView.addSubview(mainView)
@@ -154,14 +162,6 @@ final class TrackerCell: UICollectionViewCell {
             return "\(count) дней"
         }
     }
-    
-    private let doneImage = UIImage(named: "done")
-    
-    private let plusImage: UIImage = {
-        let pointSize = UIImage.SymbolConfiguration(pointSize: 11)
-        let image = UIImage(systemName: "plus",withConfiguration: pointSize) ?? UIImage()
-        return image
-    }()
     
     @objc func trackButtonTapped() {
         guard let trackerId, let indexPath else { return }

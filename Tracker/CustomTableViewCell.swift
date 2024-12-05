@@ -10,15 +10,16 @@ import UIKit
 final class CustomTableViewCell: UITableViewCell {
     
     static let cellIdentifier = "customCell"
-    private lazy var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let titleLabel = UILabel()
-        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        titleLabel.textColor = UIColor(named: "yp-black")
         return titleLabel
     }()
     
-    private lazy var descriptionLabel: UILabel = {
+    private let descriptionLabel: UILabel = {
         let descriptionLabel = UILabel()
-        descriptionLabel.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        descriptionLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         descriptionLabel.textColor = UIColor(named: "yp-gray")
         return descriptionLabel
     }()
@@ -51,7 +52,7 @@ final class CustomTableViewCell: UITableViewCell {
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             
             descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
             descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
             
         ])

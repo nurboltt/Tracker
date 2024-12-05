@@ -7,13 +7,6 @@
 
 import UIKit
 
-enum FakeCategories: String, CaseIterable {
-    case important = "Важное"
-    case habits = "Привычки"
-    case sport = "Спорт"
-    case nutrition = "Питание"
-}
-
 protocol CategoryTableViewControllerDelegate: AnyObject {
     func addCategory(category: String)
 }

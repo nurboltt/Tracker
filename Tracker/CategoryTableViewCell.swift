@@ -10,7 +10,7 @@ import UIKit
 final class CategoryTableViewCell: UITableViewCell {
     
     static let categoryCellIdentifier = "categoryCellIdentifier"
-    private lazy var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         return titleLabel
@@ -33,15 +33,12 @@ final class CategoryTableViewCell: UITableViewCell {
         backgroundColor = UIColor(named: "yp-light-gray")
         contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         
-        [titleLabel].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview($0)
-        }
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
+            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
     
